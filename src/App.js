@@ -47,7 +47,6 @@ function App() {
     }
   }, [fromCurrency, toCurrency]);
 
-
   const handleAmountChange = (e, set) => {
     if (isNaN(e.target.value) || e.target.value === '') {
       setAmount();
