@@ -18,38 +18,43 @@ function App() {
     toAmount = amount;
     fromAmount = amount / exchangeRate;
   }
+  console.log(fromAmount, toAmount, amount, exchangeRate)
 
   useEffect(() => {
     fetch(API_KEY)
       .then(res => res.json())
       .then(data => {
         setCurrencies([data.base, Object.keys(data.rates)][1]);
-        setFromCurrency('CAD');
-        setToCurrency('USD');
-        setExchangeRate(data.rates['USD']);
+
+        if (!fromCurrency) {
+          setFromCurrency('CAD');
+        }
+        if (!toCurrency) {
+          setToCurrency('USD');
+        } 
+        setExchangeRate(data.rates[toCurrency] / data.rates[fromCurrency]);
       });
-  }, []);
+  }, [fromCurrency, toCurrency]);
 
   useEffect(() => {
     if (fromCurrency != null && toCurrency != null) {
-      fetch(`${API_KEY}?base=${fromCurrency}&symbols=${toCurrency}`)
+      fetch(API_KEY)
         .then(res => res.json())
-        .then(data => setExchangeRate(data.rates[toCurrency]))
+        .then(data =>
+          setExchangeRate(data.rates[toCurrency] / data.rates[fromCurrency])
+        )
     }
   }, [fromCurrency, toCurrency]);
 
 
   const handleAmountChange = (e, set) => {
-    setAmount(e.target.value);
-    setAmountFromCurrency(set);
-  }
-
-  const handleFromAmountChange = e => {
-    handleAmountChange(e, true);
-  }
-
-  const handleToAmountChange = e => {
-    handleAmountChange(e, false);
+    if (isNaN(e.target.value) || e.target.value === '') {
+      setAmount();
+      setAmountFromCurrency(set);
+    } else {
+      setAmount(parseFloat(e.target.value));
+      setAmountFromCurrency(set);
+    }
   }
 
   return (
@@ -59,7 +64,7 @@ function App() {
         currencies={currencies}
         selectedCurrency={fromCurrency}
         onChangeCurrency={e => setFromCurrency(e.target.value)}
-        onChangeAmount={handleFromAmountChange}
+        onChangeAmount={e => handleAmountChange(e, true)}
         amount={fromAmount}
       />
       <div>=</div>
@@ -67,7 +72,7 @@ function App() {
         currencies={currencies}
         selectedCurrency={toCurrency}
         onChangeCurrency={e => setToCurrency(e.target.value)}
-        onChangeAmount={handleToAmountChange}
+        onChangeAmount={e => handleAmountChange(e, false)}
         amount={toAmount}
       />
     </>
