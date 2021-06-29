@@ -4,6 +4,8 @@ import './global.css';
 const API_KEY = 'http://api.exchangeratesapi.io/v1/latest?access_key=5bfaa8e2fad431cd583e5971c3b0b7df';
 const fixedDecimals = 2;
 
+const cors = require('cors');
+
 function App() {
   const [currencies, setCurrencies] = useState([]);
   const [fromCurrency, setFromCurrency] = useState();
