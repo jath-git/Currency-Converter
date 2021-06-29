@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import CurrencyRow from './CurrencyRow.js'
-const API_KEY = 'http://api.exchangeratesapi.io/v1/latest?access_key=6b0b0cf0d45d7ac2ae81d1571a3e7091';
+import './global.css';
+const API_KEY = 'http://api.exchangeratesapi.io/v1/latest?access_key=5bfaa8e2fad431cd583e5971c3b0b7df';
+const fixedDecimals = 2;
 
 function App() {
   const [currencies, setCurrencies] = useState([]);
@@ -13,12 +15,11 @@ function App() {
   let toAmount = 0, fromAmount = 0;
   if (amountFromCurrency) {
     fromAmount = amount;
-    toAmount = amount * exchangeRate;
+    toAmount = (amount * exchangeRate).toFixed(fixedDecimals);
   } else {
     toAmount = amount;
-    fromAmount = amount / exchangeRate;
+    fromAmount = (amount / exchangeRate);
   }
-  console.log(fromAmount, toAmount, amount, exchangeRate)
 
   useEffect(() => {
     fetch(API_KEY)
@@ -31,7 +32,7 @@ function App() {
         }
         if (!toCurrency) {
           setToCurrency('USD');
-        } 
+        }
         setExchangeRate(data.rates[toCurrency] / data.rates[fromCurrency]);
       });
   }, [fromCurrency, toCurrency]);
@@ -59,22 +60,32 @@ function App() {
 
   return (
     <>
-      <p>Convert</p>
-      <CurrencyRow
-        currencies={currencies}
-        selectedCurrency={fromCurrency}
-        onChangeCurrency={e => setFromCurrency(e.target.value)}
-        onChangeAmount={e => handleAmountChange(e, true)}
-        amount={fromAmount}
-      />
-      <div>=</div>
-      <CurrencyRow
-        currencies={currencies}
-        selectedCurrency={toCurrency}
-        onChangeCurrency={e => setToCurrency(e.target.value)}
-        onChangeAmount={e => handleAmountChange(e, false)}
-        amount={toAmount}
-      />
+      <div id="v-center">
+        <p>Convert</p>
+        <table>
+          <tr>
+            <td class="right">
+              <CurrencyRow
+                currencies={currencies}
+                selectedCurrency={fromCurrency}
+                onChangeCurrency={e => setFromCurrency(e.target.value)}
+                onChangeAmount={e => handleAmountChange(e, true)}
+                amount={fromAmount}
+              />
+            </td>
+            <td class="center">=</td>
+            <td>
+              <CurrencyRow
+                currencies={currencies}
+                selectedCurrency={toCurrency}
+                onChangeCurrency={e => setToCurrency(e.target.value)}
+                onChangeAmount={e => handleAmountChange(e, false)}
+                amount={toAmount}
+              />
+            </td>
+          </tr>
+        </table>
+      </div>
     </>
   );
 }

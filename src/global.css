@@ -1,0 +1,45 @@
+body {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: lightblue;
+}
+
+#v-center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    background-color: rgb(137, 173, 185);
+}
+
+p {
+    text-align: center;
+    font-size: 40px;
+    font-style: bold;
+}
+
+input {
+    padding: 10px 30px;
+    width: 25%;
+    font-size: 20px;
+    background-color: whitesmoke;
+    border-radius: 10px;
+    border: black 1px;
+}
+
+select {
+    width: 30%;
+    background-color: whitesmoke;
+    border: transparent;
+    font-size: 20px;
+}
+
+table {
+    width: 100%;
+}
+
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
